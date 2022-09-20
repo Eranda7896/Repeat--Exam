@@ -1,13 +1,18 @@
 package controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import model.Student;
+import view.tm.StudentTm;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class StudentFormController {
     public TableView tblStudent;
@@ -23,6 +28,37 @@ public class StudentFormController {
     public TextField txtContact;
     public TextField txtNic;
     public TextField txtAddress;
+
+
+    public void initialize(){
+        colId.setCellValueFactory(new PropertyValueFactory<>("studentId"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("studentName"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        colContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colNic.setCellValueFactory(new PropertyValueFactory<>("nic"));
+
+        try {
+            setStudentToTable(new StudentController().getAllStudent());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        tblStudent.refresh();
+    }
+
+
+    private void setStudentToTable(ArrayList<Student> students){
+        ObservableList<Student> obList = FXCollections.observableArrayList();
+        students.forEach(e->{
+            obList.add(
+                    new StudentTm(e.getStudentId(), e.getStudentName(), e.getEmail(), e.getContact(),e.getAddress(), e.getNic()));
+        });
+//        System.out.println(obList);
+        tblStudent.setItems(obList);
+        tblStudent.refresh();
+    }
 
     public void saveOnAction(ActionEvent actionEvent) {
         Student s1 = new Student(
