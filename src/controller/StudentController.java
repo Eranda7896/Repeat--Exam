@@ -39,7 +39,11 @@ public class StudentController implements StudentService {
 
     @Override
     public boolean deleteStudent(String studentId) throws SQLException, ClassNotFoundException {
-        return false;
+        if (DbConnection.getInstance().getConnection().prepareStatement("DELETE FROM Student WHERE studentId='"+studentId+"'").executeUpdate()>0){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override

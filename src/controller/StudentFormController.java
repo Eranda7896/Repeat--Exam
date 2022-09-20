@@ -99,5 +99,16 @@ public class StudentFormController {
     }
 
     public void DeleteOnAction(ActionEvent actionEvent) {
+        try {
+            if (new StudentController().deleteStudent(txtId.getText())){
+                new Alert(Alert.AlertType.CONFIRMATION, "Deleted").show();
+            }else {
+                new Alert(Alert.AlertType.WARNING, "Try again").show();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
